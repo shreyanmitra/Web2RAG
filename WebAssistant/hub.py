@@ -11,12 +11,13 @@ import pandas as pd
 import xmltodict
 import urllib3
 import certifi
+import warnings
 
-class WebAssistant:
+class Hub:
     def __init__(self):
         self.rag_chain = None
 
-    def getChatbot(openai_api_key, baseURLs, expandBases = True, sitemaps = "sitemap.xml"):
+    def getChatbot(self, openai_api_key, baseURLs, expandBases = True, sitemaps = "sitemap.xml"):
         print("For security reasons we do not store your OpenAI API key. You will need to reauthenticate for each use of the API.")
 
         llm = ChatOpenAI(
@@ -47,49 +48,30 @@ class WebAssistant:
         prompt = hub.pull("rlm/rag-prompt")
         def format_docs(docs):
             return "\n\n".join(doc.page_content for doc in docs)
-        rag_chain = (
+        self.rag_chain = (
             {"context": retriever | format_docs, "question": RunnablePassthrough()}
             | prompt
             | llm
             | StrOutputParser()
         )
-        return rag_chain
 
     def answer(self, prompt):
         if not self.rag_chain:
             raise NotImplementedError("Must call getChatbot first before answer.")
         return self.rag_chain.invoke(prompt)
 
-    @classmethod
-    def getEmbedHTML(cls, openai_api_key, baseURLs, expandBases = True, sitemaps = "sitemap.xml"):
+    def launch(self, openai_api_key = None, baseURLs = None, expandBases = True, sitemaps = "sitemap.xml"):
+        if not self.rag_chain:
+            self.getChatbot(openai_api_key, baseURLs, expandBases, sitemaps)
+        warnings.filterwarnings("ignore")
+        with gr.Blocks(title = "WebAssistant", css="footer {display:none !important}") as interface:
+            gr.Markdown("# Welcome To WebAssistant ⛑️ ")
+            chatbot = gr.Chatbot()
+            gr.ChatInterface(fn=self.answer, chatbot=chatbot)
+            gr.Markdown("🦾 Generated using ``shreyanmitra/WebAssistant``")
 
-        html = '''<html>
-        	<head>
-        		<script type="module" crossorigin src="https://cdn.jsdelivr.net/npm/@gradio/lite/dist/lite.js"></script>
-        		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gradio/lite/dist/lite.css" />
-        	</head>
-        	<body>
-                <gradio-requirements>
-                WebAssistant
-                gradio
-                </gradio-requirement>
-        		<gradio-lite>
-        		import gradio as gr
-                from WebAssistant import*
+        interface.launch(share = True, debug = True)
 
-                assistant = WebAssistant().getChatbot(openai_api_key=''' + openai_api_key + ", baseURLs=" + str(baseURLs) + ", expandBases=" + str(expandBases) + ", sitemaps=" + str(sitemaps) + ''')
-
-                def answer(message, history):
-                    return assistant.answer(message)
-
-        		with gr.Blocks() as interface:
-                    gr.Markdown("# Welcome To WebAssistant")
-                    chatbot = gr.Chatbot()
-                    gr.ChatInterface(fn=answer, chatbot=chatbot)
-                    gr.Markdown("Generated using ``shreyanmitra/WebAssistant``")
-
-                interface.launch()
-        		</gradio-lite>
-        	</body>
-        </html>'''
-        return html
+    def createReactApp(self, openai_api_key, baseURLs, cloudflare_api_key):
+        #expandBases is always True, and we don't need the sitemap
+        

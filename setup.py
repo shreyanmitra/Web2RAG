@@ -18,7 +18,8 @@ setup(name='WebAssistant',
         "pandas",
         "xmltodict",
         "urllib3",
-        "certifi"
+        "certifi",
+        "warnings"
       ],
       include_package_data=True,
       package_data={'': ['static/*']},

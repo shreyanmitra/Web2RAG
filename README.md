@@ -8,7 +8,7 @@ This repository contains a Python library and the template for a React app, both
 1. Make sure you have an OpenAI API key
 2. Have the base URL of the website for which you want to create the chatbot
 
-## Using the Python Library
+## Using (Just) Python
 
 To use the python library, first install with
 

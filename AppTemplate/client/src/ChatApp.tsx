@@ -1,3 +1,4 @@
+//(C) Shreyan Mitra
 import React, {Component, KeyboardEvent} from "react";
 import { isRecord } from './record';
 import "./style.css"
@@ -67,6 +68,11 @@ export class ChatApp extends Component<{}, ChatAppState> {
         );
       }
     }
+
+    if (this.state.messages.length > 0){
+      messageContainer.push(<div className="ChatItem-timeStamp" style={{display: "flex", justifyContent: "center"}}>Created using shreyanmitra/WebAssistant, Langchain, and OpenAI</div>);
+    }
+
     return (<div>{messageContainer}</div>);
   }
 

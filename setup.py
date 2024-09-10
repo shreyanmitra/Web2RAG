@@ -1,11 +1,11 @@
 from setuptools import setup, find_namespace_packages
 
 setup(name='WebAssistant',
-      version='0.0.3',
+      version='0.0.4',
       description='WebAssistant: Quickly Deploy an AI Assistant Chatbot for your Personal Webpage',
       long_description=open("README.md", "r", encoding="utf-8").read(),
       long_description_content_type="text/markdown",
-      keywords="ai chatbot website-builder gpt-4",
+      keywords="ai chatbot website-builder gpt-4 rag",
       url="https://github.com/shreyanmitra/WebAssistant",
       author = "Shreyan Mitra",
       install_requires=[

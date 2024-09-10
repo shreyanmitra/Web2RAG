@@ -72,6 +72,13 @@ class Hub:
 
         interface.launch(share = True, debug = True)
 
-    def createReactApp(self, openai_api_key, baseURLs, cloudflare_api_key):
+    def deployReactExpressApp(self, openai_api_key, baseURL, rootDir):
         #expandBases is always True, and we don't need the sitemap
-        
+        import os
+        bashCommand1 = "cd " + rootDir + " && git clone -b branchname --depth 1 --single-branch https://github.com/shreyanmitra/WebAssistant.git"
+        os.system(bashCommand1)
+        with open("WebAssistant/AppTemplate/server/.env", "w") as file:
+            file.write("OPENAI_API_KEY=" + openai_api_key + "\nURL=" + baseURL)
+        bashCommand2 =  "rm -rf WebAssistant/.git/ && rm-rf WebAssistant/WebAssistant/ && rm -rf WebAssistant/.github/ && rm-rf WebAssistant/.gitignore && rm-rf WebAssistant/setup.py && rm-rf WebAssistant/*.md && cd WebAssistant/AppTemplate && cd client && npm install --no-audit && npm run build && npm run start && cd .. && cd server && npm install --no-audit && npm run build && npm run start"
+        os.system(bashCommand2)
+        print("App deployed to localhost:8080")

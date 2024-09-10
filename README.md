@@ -41,5 +41,10 @@ This will deploy a React frontend + Express backend to ``localhost:8080``. From 
 
 Note that you must NOT remove the credits to this repository included at the bottom of the chatbot UI.
 
+Here's an image of the React+Express app in action with base url [shreyanmitra.github.io]
+
+![Screen Shot 2024-09-09 at 6 34 14 PM](https://github.com/user-attachments/assets/aec2d7b2-a2cd-43bd-8227-3cacb77bb364)
+
+
 ## Questions?
 Feel free to send any questions you have through the issues tab on Github.
